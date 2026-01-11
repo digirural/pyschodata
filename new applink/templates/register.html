@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block auth_content %}
+<div class="auth-container fade-in">
+    <div class="glass-card" style="padding: 2.5rem; text-align: center;">
+        <h1 style="margin-bottom: 0.5rem;">Create Account</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Join to start tracking collections</p>
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group" style="text-align: left;">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Ex. John Doe">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" required placeholder="Ex. 9876543210">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Choose a username">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a strong password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </form>
+
+        <p style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
+            Already have an account? <a href="{{ url_for('login') }}">Sign In</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

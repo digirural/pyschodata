@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashFlow - Management System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    {% if session.get('user_id') %}
+    <div class="app-container fade-in">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">VD</div>
+                <div class="brand-name">VasoolDrive</div>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="{{ url_for('dashboard') }}" class="active">
+                        <span>🏠</span> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('collection') }}">
+                        <span>💰</span> Collection
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('customers') }}">
+                        <span>👥</span> Customer
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('expenses') }}">
+                        <span>💸</span> Expense
+                    </a>
+                </li>
+
+                {% if session.get('user_role') == 'admin' %}
+                <li class="nav-item">
+                    <a href="{{ url_for('monthly') }}">
+                        <span>📅</span> Monthly
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('investment') }}">
+                        <span>💼</span> Investment
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('reports') }}">
+                        <span>📊</span> Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('cashout') }}">
+                        <span>🏧</span> Cash Out
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="{{ url_for('logout') }}">
+                        <span>🔓</span> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button id="mobile-toggle" class="btn" style="padding: 0.5rem; display: none;">☰</button>
+                    <h3>Overview</h3>
+                </div>
+
+                <div class="user-profile" style="gap: 1.5rem;">
+                    <div style="text-align: right; color: var(--text-muted); font-size: 0.9rem;">
+                        <span id="current-date"></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="text-align: right; line-height: 1.2;">
+                            <div style="font-weight: 600;">Welcome, {{ session.get('user_name') }}</div>
+                        </div>
+                        <div class="avatar">{{ session.get('user_name')[0] | upper }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Set current date
+                const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+                document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-GB', dateOptions).replace(/\//g, '-');
+            </script>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div style="margin-bottom: 2rem;">
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }} glass-card">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% block app_content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+    <!-- Auth Layout -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }} glass-card fade-in">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block auth_content %}{% endblock %}
+    {% endif %}
+
+    <script>
+        // Mobile Sidebar Toggle
+        const toggle = document.getElementById('mobile-toggle');
+        const sidebar = document.getElementById('sidebar');
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-open');
+            });
+        }
+    </script>
+</body>
+
+</html>
